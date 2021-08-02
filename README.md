@@ -2,35 +2,76 @@
 
 mzpm is a minimal plugin manager for zsh.
 
-## Usage
+## Getting Started
 
-First, add the following lines to your `zshrc`:
+### Requirements
 
-```zsh
-plugins=(
-    ...
-)
+- zsh
+- git
+
+### Installation
+
+Clone this repository locally by using git, for example:
+
+```
+git clone https://github.com/xylous/mzpm.zsh
 ```
 
-The `...` section should contain entries of the form
-`'GitHub_username/repository'` (each entry should be a single string).
-
-Keep in mind that you have to source this plugin *at the end* of your zshrc.
-For starters, it looks something like this:
+Then add the following line to your zshrc:
 
 ```zsh
+# load mzpm
 source /path/to/plugin/manager/mzpm.zsh
 ```
 
-When you add a new plugin to the list, mzpm will fetch them for you from GitHub.
-It may take a bit of time to install them all, but it only has to do this once.
+## Usage
 
-## Configuration
+You can use `mzpm` both in your zshrc and on the command line, provided you
+loaded it (see above).
 
-You optionally can set a `PLUGIN_DIR` global variable in your zshrc, which tells
-mzpm where to install plugins. By default, it would create a `plugins/`
-directory in the same folder it is located and install them there.
+By default, plugins are installed at `$XDG_CACHE_HOME/mzpm/`.
 
-For example, if `mzpm.zsh` is in some `$HOME/foo` directory and is ran there, it
-would, by default, create a `$HOME/foo/plugins` directory and install everything
-there.
+### GitHub
+
+`mzpm` can download plugins from GitHub using the following syntax:
+
+```
+mzpm <plugin_author>/<plugin_name>
+```
+
+For example, to download and use
+[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting),
+do:
+
+```
+mzpm 'zsh-users/zsh-syntax-highlighting'
+```
+
+### Local plugins
+
+You can also add a plugin to `mzpm`'s default installation path and tell it to
+source it.
+
+For example, to manually load
+[zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting),
+do, on the command line:
+
+```
+$ git clone 'https://github.com/zsh-users/zsh-syntax-highlighting' "${XDG_CACHE_HOME:-$HOME/.cache}/mzpm/zsh-syntax-highlighting"
+$ mzpm 'zsh-syntax-highlighting'
+```
+
+Once you've done that, to load that plugin on every zsh startup, add the
+following to your zshrc:
+
+```
+mzpm 'zsh-syntax-highlighting'
+```
+
+## Contributing
+
+Issues and pull requests are welcome.
+
+## License
+
+[MIT](LICENSE)

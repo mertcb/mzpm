@@ -1,26 +1,53 @@
-[[ -z "${PLUGIN_DIR}" ]] && export PLUGIN_DIR="$(dirname ${0})/plugins"
+#!/usr/bin/env zsh
 
-[[ -d "${PLUGIN_DIR}" ]] || mkdir "${PLUGIN_DIR}"
+[[ ! -z "${BIN_NAME}" ]] \
+    || readonly BIN_NAME="${$(basename "$0")%.*}"
+[[ ! -z "${CACHE_DIR}" ]] \
+    || readonly CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/${BIN_NAME}"
 
-# Download not already downloaded plugins and source them
-load_zsh_plugins() {
-    for plugin in ${plugins}; do
-        local plug_name="$(basename ${plugin})"
-        local plug_location="${PLUGIN_DIR}/${plug_name}"
-
-        if [[ ! -d "${plug_location}" ]]; then
-            local plug_link="https://github.com/${plugin}"
-            git clone "${plug_link}" "${plug_location}"
+# main function
+function mzpm()
+{
+    for plug in "$@"; do
+        local plug_name="$(basename ${plug})"
+        local install_dir="${CACHE_DIR}/${plug_name}"
+        if [[ ! -d "${install_dir}" ]]; then
+            local plug_author="$(dirname ${plug})"
+            download_plugin_from_github "${plug_author}" "${plug_name}" "${install_dir}"
         fi
-
-        if [[ -f "${plug_location}/${plug_name}.plugin.zsh" ]]; then
-            source "${plug_location}/${plug_name}.plugin.zsh"
-        elif [[ -f "${plug_location}/${plug_name}.zsh" ]]; then
-            source "${plug_location}/${plug_name}.zsh"
-        fi
+        load_zsh_plugin "${plug_name}" "${install_dir}"
     done
-
-    return 0;
 }
 
-load_zsh_plugins
+###
+# Download a ZSH plugin from github
+# Arguments:    $1: plugin author
+#               $2: plugin name
+#               $3: directory in which the plugin should be installed
+###
+function download_plugin_from_github()
+{
+    local plug_author="$1"
+    local plug_name="$2"
+    local install_dir="$3"
+    local plug_link="https://github.com/${plug_author}/${plug_name}"
+
+    # Don't reinstall
+    git clone --depth=1 "${plug_link}" "${install_dir}"
+}
+
+###
+# Source a ZSH plugin
+# Arguments:    $1: plugin name
+#               $2: the directory the plugin was installed in
+###
+function load_zsh_plugin() {
+    local plug_name="$1"
+    local install_dir="$2"
+
+    if [[ -f "${install_dir}/${plug_name}.plugin.zsh" ]]; then
+        source "${install_dir}/${plug_name}.plugin.zsh"
+    elif [[ -f "${install_dir}/${plug_name}.zsh" ]]; then
+        source "${install_dir}/${plug_name}.zsh"
+    fi
+}
