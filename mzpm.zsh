@@ -13,9 +13,9 @@ function mzpm()
         local install_dir="${CACHE_DIR}/${plug_name}"
         if [[ ! -d "${install_dir}" ]]; then
             local plug_author="$(dirname ${plug})"
-            download_plugin_from_github "${plug_author}" "${plug_name}" "${install_dir}"
+            mzpm_download_plugin_from_github "${plug_author}" "${plug_name}" "${install_dir}"
         fi
-        load_zsh_plugin "${plug_name}" "${install_dir}"
+        mzpm_load_zsh_plugin "${plug_name}" "${install_dir}"
     done
 }
 
@@ -25,7 +25,7 @@ function mzpm()
 #               $2: plugin name
 #               $3: directory in which the plugin should be installed
 ###
-function download_plugin_from_github()
+function mzpm_download_plugin_from_github()
 {
     local plug_author="$1"
     local plug_name="$2"
@@ -41,7 +41,7 @@ function download_plugin_from_github()
 # Arguments:    $1: plugin name
 #               $2: the directory the plugin was installed in
 ###
-function load_zsh_plugin() {
+function mzpm_load_zsh_plugin() {
     local plug_name="$1"
     local install_dir="$2"
 
