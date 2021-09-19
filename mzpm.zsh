@@ -9,6 +9,13 @@
 function mzpm()
 {
     for plug in "$@"; do
+        # Check if plugin is already sourced; if true, then skip
+        if [[ "${MZPM_SOURCED_PLUGINS[@]}" =~ "${plug}" ]]; then
+            continue
+        else
+            MZPM_SOURCED_PLUGINS+=("${plug}")
+        fi
+
         local plug_name="$(basename ${plug})"
         local install_dir="${CACHE_DIR}/${plug_name}"
         if [[ ! -d "${install_dir}" ]]; then
