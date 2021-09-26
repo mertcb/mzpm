@@ -56,5 +56,7 @@ function mzpm_load_zsh_plugin() {
         source "${install_dir}/${plug_name}.plugin.zsh"
     elif [[ -f "${install_dir}/${plug_name}.zsh" ]]; then
         source "${install_dir}/${plug_name}.zsh"
+    elif [[ -f "${install_dir}/${plug_name}.zsh-theme" ]]; then
+        source "${install_dir}/${plug_name}.zsh-theme"
     fi
 }
