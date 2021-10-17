@@ -14,7 +14,7 @@ mzpm is a minimal plugin manager for zsh.
 Clone this repository locally by using git, for example:
 
 ```
-git clone https://github.com/xylous/mzpm.zsh
+git clone https://github.com/xylous/mzpm
 ```
 
 Then add the following line to your zshrc:
